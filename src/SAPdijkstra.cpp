@@ -4,6 +4,7 @@
 #include <limits>
 #include <algorithm>
 #include <cstdint>
+#include <iostream>
 
 void MinCostFlowSAPDijkstra::addEdge(int from, int to, int64_t capacity, int64_t cost, int id) {
 	normalized = false;
@@ -41,7 +42,7 @@ void MinCostFlowSAPDijkstra::normalize() {
 }
 
 int64_t MinCostFlowSAPDijkstra::augment(int vertex, int64_t flow, const nstd::Vector<int>& from) {
-	if (vertex == sink) return flow;
+	if (vertex == source) return flow;
 	int64_t augmentFlow = augment(edges[from[vertex]].from, std::min(flow, edges[from[vertex]].capacity), from);
 	edges[from[vertex]].capacity -= augmentFlow;
 	edges[from[vertex]^1].capacity += augmentFlow;
@@ -50,7 +51,7 @@ int64_t MinCostFlowSAPDijkstra::augment(int vertex, int64_t flow, const nstd::Ve
 
 std::pair<int64_t, int64_t> MinCostFlowSAPDijkstra::findAugmentingPath(int64_t maxAugment) {
 	nstd::StaticHeap dijkstra(vertices + 1);
-	nstd::Vector<bool> used(vertices + 1);
+	nstd::Vector<int> used(vertices + 1);
 	nstd::Vector<int> from(vertices + 1);
 	nstd::Vector<int64_t> dist(vertices + 1);
 	for (int i = 1; i <= vertices; i++) {
@@ -79,7 +80,7 @@ std::pair<int64_t, int64_t> MinCostFlowSAPDijkstra::findAugmentingPath(int64_t m
 		if (used[i]) potentials[i] += dist[i];
 	}
 	if (used[sink]) {
-		int64_t flow = augment(source, maxAugment, from);
+		int64_t flow = augment(sink, maxAugment, from);
 		return {flow, flow * cost};
 	}
 	else return {0, 0};
@@ -101,5 +102,5 @@ std::pair<int64_t, int64_t> MinCostFlowSAPDijkstra::pushFlow(int64_t flowAmount)
 
 
 MinCostFlowSAPDijkstra::MinCostFlowSAPDijkstra(int vertices_, int source_, int sink_) :
-vertices(vertices_), source(source_), sink(sink_), g(vertices), potentials(vertices) {
+vertices(vertices_), source(source_), sink(sink_), g(vertices + 1), potentials(vertices + 1) {
 }

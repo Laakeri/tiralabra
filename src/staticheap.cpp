@@ -17,8 +17,8 @@ std::pair<int64_t, int> StaticHeap::pop() {
 		if (data[index*2] <= data[index*2 + 1]) index = index*2;
 		else index = index*2 + 1;
 	}
-	std::pair<int64_t, int> ret = {data[index], index};
-	putValue(INFINITE, index);
+	std::pair<int64_t, int> ret = {data[index], index - size};
+	putValue(INFINITE, index - size);
 	return ret;
 }
 

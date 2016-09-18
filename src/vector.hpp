@@ -3,7 +3,6 @@
 // Implementation of STL style Vector
 #include <stdlib.h>
 #include <stdexcept>
-#include <iostream>
 
 namespace nstd {
 
@@ -14,7 +13,7 @@ template<class T>
 class Vector {
 private:
 	T* container;
-	size_t VectorSize;
+	size_t vectorSize;
 	size_t containerSize;
 	void destructElements();
 	void destructBack();
@@ -47,25 +46,25 @@ public:
 template<class T>
 Vector<T>::Vector() {
 	container = nullptr;
-	VectorSize = 0;
+	vectorSize = 0;
 	containerSize = 0;
 }
 
 template<class T>
 Vector<T>::Vector(size_t newSize) : Vector() {
 	reserve(newSize);
-	VectorSize = newSize;
-	new (container) T[newSize];
+	vectorSize = newSize;
+	new (container) T[newSize]();
 }
 
 template<class T>
 void Vector<T>::destructBack() {
-	container[--VectorSize].~T();
+	container[--vectorSize].~T();
 }
 
 template<class T>
 void Vector<T>::destructElements() {
-	while (VectorSize) destructBack();
+	while (vectorSize) destructBack();
 }
 
 template<class T>
@@ -89,12 +88,13 @@ void Vector<T>::reserve(size_t newSize) {
 	newSize = std::max(newSize, containerSize * 2 + 1);
 	container = (T*)realloc(container, newSize * sizeof(T));
 	if (container == nullptr) throw std::runtime_error("Bad alloc");
+	containerSize = newSize;
 }
 
 template<class T>
 void Vector<T>::push_back(const T& elem) {
-	reserve(VectorSize + 1);
-	container[VectorSize++] = elem;
+	reserve(vectorSize + 1);
+	container[vectorSize++] = elem;
 }
 
 template<class T>
@@ -102,13 +102,13 @@ void Vector<T>::clear() {
 	destructElements();
 	free(container);
 	container = nullptr;
-	VectorSize = 0;
+	vectorSize = 0;
 	containerSize = 0;
 }
 
 template<class T>
 size_t Vector<T>::size() {
-	return VectorSize;
+	return vectorSize;
 }
 
 template<class T>
@@ -118,7 +118,7 @@ VectorIterator<T> Vector<T>::begin() const {
 
 template<class T>
 VectorIterator<T> Vector<T>::end() const {
-	return VectorIterator<T>(this, VectorSize);
+	return VectorIterator<T>(this, vectorSize);
 }
 
 template<class T>

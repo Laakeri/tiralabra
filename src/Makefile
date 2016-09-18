@@ -1,13 +1,13 @@
 CC = g++
 CFLAGS = -std=c++11 -O2 -Wall -Wextra -Wshadow -g
 
-all: SAPdijkstra
+all: SAPdijkstra.o staticheap.o
 
-SAPdijkstra: staticheap.o
-	$(CC) $(CFLAGS) SAPdijkstra.cpp -c -o SAPdijkstra.o
+SAPdijkstra.o: SAPdijkstra.cpp SAPdijkstra.hpp vector.hpp
+	$(CC) $(CFLAGS) SAPdijkstra.cpp -c
 
-staticheap.o:
-	$(CC) $(CFLAGS) staticheap.cpp -c -o staticheap.o
+staticheap.o: staticheap.cpp staticheap.hpp vector.hpp
+	$(CC) $(CFLAGS) staticheap.cpp -c
 
 clean:
 	rm *.o
