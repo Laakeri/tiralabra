@@ -1,4 +1,4 @@
-#include "../../src/SAPdijkstra.hpp"
+#include "../../src/SAPSPFA.hpp"
 #include "../../src/vector.hpp"
 #include <iostream>
 typedef long long ll;
@@ -10,7 +10,7 @@ int main(){
 	std::cin>>n>>k;
 	int source = 2*n + 9;
 	int sink = 2*n + 10;
-	MinCostFlowSAPDijkstra mf(2*n + 10, source, sink);
+	MinCostFlowSAPSPFA mf(2*n + 10, source, sink);
 	const ll inf = 1e18 / (ll)n;
 	for (int i = 1; i <= n; i++) {
 		mf.addEdge(i*2, i*2 + 1, 1, -inf);
