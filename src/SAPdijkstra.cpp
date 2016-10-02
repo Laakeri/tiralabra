@@ -4,7 +4,6 @@
 #include <limits>
 #include <algorithm>
 #include <cstdint>
-#include <iostream>
 
 void MinCostFlowSAPDijkstra::addEdge(int from, int to, int64_t capacity, int64_t cost, int id) {
 	normalized = false;
