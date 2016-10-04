@@ -1,7 +1,10 @@
 CC = g++
 CFLAGS = -std=c++11 -O2 -Wall -Wextra -Wshadow -g
 
-all: SAPSPFA.o SAPdijkstra.o staticheap.o
+all: scalingcirculation.o SAPSPFA.o SAPdijkstra.o staticheap.o
+
+scalingcirculation.o: scalingcirculation.cpp scalingcirculation.hpp vector.hpp
+	$(CC) $(CFLAGS) scalingcirculation.cpp -c
 
 SAPSPFA.o: SAPSPFA.cpp SAPSPFA.hpp vector.hpp
 	$(CC) $(CFLAGS) SAPSPFA.cpp -c
