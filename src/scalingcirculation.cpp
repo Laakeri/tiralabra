@@ -20,16 +20,6 @@ void ScalingCirculation::addEdge(int from, int to, int64_t capacity, int64_t cos
 	g[to].push_back((int)edges.size() - 1);
 }
 
-void ScalingCirculation::fixPotentials() {
-	int64_t maxP = 0;
-	for (int i = 1; i <= vertices; i++) {
-		maxP = std::max(maxP, potentials[i]);
-	}
-	for (int i = 1; i <= vertices; i++) {
-		potentials[i] -= maxP;
-	}
-}
-
 void ScalingCirculation::augmentEdge(int edge) {
 	edges[edge].capacity++;
 	if (edges[edge].capacity > 1) return; // Case 1
@@ -65,24 +55,14 @@ void ScalingCirculation::augmentEdge(int edge) {
 			}
 		}
 	}
-	std::cout<<INFINITE<<std::endl;
-	int64_t mdist = 0;
-	for (int i = 1; i <= vertices; i++) {
-		if (used[i]) mdist = std::max(mdist, dist[i]);
-	}
 	if (negCycle == 0) { // Case 2/3
 		for (int i = 1; i <= vertices; i++) {
 			if (used[i]) potentials[i] += pViolate + dist[i];
-			else potentials[i] += mdist;
-			std::cout<<potentials[i]<<std::endl;
 		}
-		fixPotentials();
 	}
 	else { // Case 4
 		for (int i = 1; i <= vertices; i++) {
 			if (used[i]) potentials[i] += dist[i];
-			else potentials[i] += mdist;
-			std::cout<<potentials[i]<<std::endl;
 		}
 		edges[edge].capacity--;
 		edges[edge^1].capacity++;
@@ -92,7 +72,51 @@ void ScalingCirculation::augmentEdge(int edge) {
 			edges[from[vertex]^1].capacity++;
 			vertex = edges[from[vertex]].from;
 		}
-		fixPotentials();
+	}
+	// Fix potentials of other vertices
+	int64_t maxDist = 0;
+	for (int i = 1; i <= vertices; i++) {
+		if (used[i]) maxDist = std::max(maxDist, dist[i]);
+	}
+	nstd::Vector<int> fixQueue;
+	size_t queueFront = 0;
+	for (int i = 1; i <= vertices; i++) {
+		if (used[i]) {
+			for (int edgeId : g[i]) {
+				Edge e = edges[edgeId^1];
+				if (e.capacity > 0 && potentials[e.to] > potentials[e.from] + e.cost) {
+					fixQueue.push_back(e.from);
+				}
+			}
+		}
+	}
+	while (queueFront < fixQueue.size()) {
+		int v = fixQueue[queueFront++];
+		if (used[v]) continue;
+		used[v] = 1;
+		potentials[v] += maxDist;
+		for (int edgeId : g[v]) {
+			Edge e = edges[edgeId];
+			if (e.capacity > 0 && potentials[e.to] > potentials[e.from] + e.cost) {
+				if (used[e.from]) abort();
+				fixQueue.push_back(e.from);
+			}
+			e = edges[edgeId^1];
+			if (e.capacity > 0 && potentials[e.to] > potentials[e.from] + e.cost) {
+				if (used[e.from]) abort();
+				fixQueue.push_back(e.from);
+			}
+		}
+	}
+	for (int i = 1; i <= vertices; i++) {
+		std::cout<<i<<" "<<potentials[i]<<std::endl;
+		for (int edgeId : g[i]) {
+			Edge e = edges[edgeId];
+			if (e.capacity > 0 && potentials[e.to] > potentials[e.from] + e.cost) {
+				std::cout<<"fail"<<std::endl;
+				abort();
+			}
+		}
 	}
 }
 

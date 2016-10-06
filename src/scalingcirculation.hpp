@@ -18,7 +18,6 @@ private:
 	nstd::Vector<int64_t> potentials;
 	nstd::Vector<nstd::Vector<int> > toAugment;
 	void augmentEdge(int edge);
-	void fixPotentials();
 public:
 	void addEdge(int from, int to, int64_t capacity, int64_t cost, int id = 0);
 	int64_t findMinCostFlow();
