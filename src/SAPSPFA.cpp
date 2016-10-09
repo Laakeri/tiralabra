@@ -13,6 +13,7 @@ void MinCostFlowSAPSPFA::addEdge(int from, int to, int64_t capacity, int64_t cos
 	g[to].push_back((int)edges.size() - 1);
 }
 
+// Augment flow along the found augmenting path
 int64_t MinCostFlowSAPSPFA::augment(int vertex, int64_t flow, const nstd::Vector<int>& from) {
 	if (vertex == source) return flow;
 	int64_t augmentFlow = augment(edges[from[vertex]].from, std::min(flow, edges[from[vertex]].capacity), from);
@@ -21,6 +22,7 @@ int64_t MinCostFlowSAPSPFA::augment(int vertex, int64_t flow, const nstd::Vector
 	return augmentFlow;
 }
 
+// Find a single augmenting path
 std::pair<int64_t, int64_t> MinCostFlowSAPSPFA::findAugmentingPath(int64_t maxAugment) {
 	nstd::Vector<int> from(vertices + 1);
 	nstd::Vector<int64_t> dist(vertices + 1);
@@ -32,6 +34,7 @@ std::pair<int64_t, int64_t> MinCostFlowSAPSPFA::findAugmentingPath(int64_t maxAu
 	nstd::Vector<int> queue;
 	size_t queueFront = 0;
 	queue.push_back(source);
+	// Use spfa
 	while (queueFront < queue.size()) {
 		int vertex = queue[queueFront++];
 		inQueue[vertex] = false;
@@ -57,6 +60,7 @@ std::pair<int64_t, int64_t> MinCostFlowSAPSPFA::findAugmentingPath(int64_t maxAu
 std::pair<int64_t, int64_t> MinCostFlowSAPSPFA::pushFlow(int64_t flowAmount) {
 	int64_t flow = 0;
 	int64_t cost = 0;
+	// Increase flow until flowAmount or maxflow is found
 	while (flowAmount > 0) {
 		std::pair<int64_t, int64_t> fl = findAugmentingPath(flowAmount);
 		flow += fl.first;

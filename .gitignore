@@ -3,6 +3,6 @@
 *.log
 *.out
 *.gz
-*.tex
+maarittely.tex
 *.o
 application/random/tester

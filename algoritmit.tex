@@ -1,0 +1,22 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{lipsum} %This package just generates Lorem Ipsum filler text. 
+\usepackage{fullpage} % changes the margin
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\begin{document}
+%Header-Make sure you update this information!!!!
+\noindent
+
+\section*{Mincost-flow-algoritmit}
+
+\section*{Mincost-flow}
+Annetaan flow-verkko $G = (V, E, U, C, s, t)$, jossa $U(e) \in \mathbb{Z_+}$ on kaaren $e$ kapasiteetti, $C(e) \in \mathbb{R}$ on kaaren $e$ hinta ja $s$ ja $t$ ovat lähde ja viemäri solmut. Annetaan lisäksi kokonaisluku $k$ joka tarkoittaa kuinka paljon virtausta lähetetään. Merkinnällä $uv$ tarkoitetaan kaarta solmusta $u$ solmuun $v$.\\\\ Minimoi $$\sum_{uv \in E} C(uv) f(uv)$$\\
+kun $f$ toteuttaa ehdot:\\ Virtauksen säilyttäminen $$\sum_{v \in V} f(uv) = \sum_{v \in V} f(uv) \text{ kaikilla } u \in V \setminus \{s, t\}$$
+\\Kapasiteettiehdot
+$$0 \le f(uv) \le U(uv) \text{ kaikilla } uv \in E$$
+\\Virtauksen määrä
+$$\sum_{v \in V} f(sv) = k \text{ ja } \sum_{v \in V} f(vt) = k$$
+Toisin sanoen lähetetään $k$ yksikköä virtausta lähteestä $s$ viemäriin $t$ niin että virtauksen käyttämien kaarien hinta on mahdollisimman pieni. Tämän voi ajatella esimerkiksi ongelmana jossa verkon solmut ovat kaupunkeja. Kaupungissa $s$ on tehdas josta pitää lähettää joka päivä $k$ tonnia tavaraa varastoon joka on kaupungissa $t$. Lisäksi tiedetään että kaupunkien välillä on junayhteyksiä (eli kaaria). Kaaren $uv$ kapasiteetti kertoo paljonko sillä junayhteydellä voi kuljettaa tavaraa päivässä kaupungista $u$ kaupunkiin $v$. Kaarien hinnat kertovat paljonko maksaa yhden tonnin tavaraa kuljettaminen sillä junayhteydellä. Nyt halutaan kuljettaa $k$ tonnia tavaraa tehtaasta varastoon päivittäin ja minimoida  kuljetuksen hinta.
+\end{document}
