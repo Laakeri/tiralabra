@@ -13,6 +13,8 @@ void MinCostFlowSAPDijkstra::addEdge(int from, int to, int64_t capacity, int64_t
 	g[to].push_back((int)edges.size() - 1);
 }
 
+
+// Compute the potential function
 void MinCostFlowSAPDijkstra::normalize() {
 	if (normalized) return;
 	normalized = true;
@@ -24,6 +26,7 @@ void MinCostFlowSAPDijkstra::normalize() {
 	nstd::Vector<int> queue;
 	size_t queueFront = 0;
 	queue.push_back(source);
+	// Use spfa to compute shortest distances in graph with negative weight edges
 	while (queueFront < queue.size()) {
 		int vertex = queue[queueFront++];
 		inQueue[vertex] = false;
@@ -40,6 +43,7 @@ void MinCostFlowSAPDijkstra::normalize() {
 	}
 }
 
+// Augment the flow along the augment path found
 int64_t MinCostFlowSAPDijkstra::augment(int vertex, int64_t flow, const nstd::Vector<int>& from) {
 	if (vertex == source) return flow;
 	int64_t augmentFlow = augment(edges[from[vertex]].from, std::min(flow, edges[from[vertex]].capacity), from);
@@ -48,6 +52,7 @@ int64_t MinCostFlowSAPDijkstra::augment(int vertex, int64_t flow, const nstd::Ve
 	return augmentFlow;
 }
 
+// Find a single augmenting path
 std::pair<int64_t, int64_t> MinCostFlowSAPDijkstra::findAugmentingPath(int64_t maxAugment) {
 	nstd::StaticHeap dijkstra(vertices + 1);
 	nstd::Vector<int> used(vertices + 1);
@@ -58,6 +63,7 @@ std::pair<int64_t, int64_t> MinCostFlowSAPDijkstra::findAugmentingPath(int64_t m
 	}
 	dist[source] = 0;
 	dijkstra.putValue(0, source);
+	// Use dijkstra to find shortest distances with reduced costs
 	while (1) {
 		std::pair<int64_t, int> vertexD = dijkstra.pop();
 		if (vertexD.first == nstd::StaticHeap::INFINITE) break;
@@ -75,6 +81,7 @@ std::pair<int64_t, int64_t> MinCostFlowSAPDijkstra::findAugmentingPath(int64_t m
 		}
 	}
 	int64_t cost = dist[sink] + potentials[sink];
+	// Update potential function
 	for (int i = 1; i <= vertices; i++) {
 		if (used[i]) potentials[i] += dist[i];
 	}
@@ -89,6 +96,7 @@ std::pair<int64_t, int64_t> MinCostFlowSAPDijkstra::pushFlow(int64_t flowAmount)
 	int64_t flow = 0;
 	int64_t cost = 0;
 	normalize();
+	// Increase flow until flowAmount or maxflow is found
 	while (flowAmount > 0) {
 		std::pair<int64_t, int64_t> fl = findAugmentingPath(flowAmount);
 		flow += fl.first;
