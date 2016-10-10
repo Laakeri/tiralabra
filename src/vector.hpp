@@ -2,6 +2,7 @@
 #define NSTD_VECTOR_HPP
 // Implementation of STL style Vector
 #include <stdlib.h>
+#include <string.h>
 #include <stdexcept>
 
 namespace nstd {
@@ -18,14 +19,16 @@ private:
 	void destructElements();
 	void destructBack();
 public:
+	void operator=(const Vector<T>& other);
 	T& operator[](size_t pos);
 	const T& operator[](size_t pos) const;
 	void reserve(size_t newSize);
 	void push_back(const T& value);
-	size_t size();
+	size_t size() const;
 	void clear();
 	Vector(size_t newSize);
 	Vector();
+	Vector(const Vector<T>& other);
 	~Vector();
 	VectorIterator<T> begin() const;
 	VectorIterator<T> end() const;
@@ -51,7 +54,12 @@ Vector<T>::Vector() {
 }
 
 template<class T>
-Vector<T>::Vector(size_t newSize) : Vector() {
+Vector<T>::Vector(const Vector<T>& other) : Vector<T>() {
+	operator=(other);
+}
+
+template<class T>
+Vector<T>::Vector(size_t newSize) : Vector<T>() {
 	reserve(newSize);
 	vectorSize = newSize;
 	new (container) T[newSize]();
@@ -94,7 +102,7 @@ void Vector<T>::reserve(size_t newSize) {
 template<class T>
 void Vector<T>::push_back(const T& elem) {
 	reserve(vectorSize + 1);
-	container[vectorSize++] = elem;
+	new (container + vectorSize++) T(elem);
 }
 
 template<class T>
@@ -107,8 +115,19 @@ void Vector<T>::clear() {
 }
 
 template<class T>
-size_t Vector<T>::size() {
+size_t Vector<T>::size() const {
 	return vectorSize;
+}
+
+template<class T>
+void Vector<T>::operator=(const Vector<T>& other) {
+	clear();
+	if (other.size() > 0) {
+		reserve(other.size());
+		container = (T*)memcpy(container, other.container, other.size() * sizeof(T));
+		if (container == nullptr) throw std::runtime_error("Bad alloc");
+	}
+	vectorSize = other.size();
 }
 
 template<class T>

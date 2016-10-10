@@ -95,7 +95,7 @@ std::pair<double, std::pair<int64_t, int64_t> > testScalingCirculation(int n, co
 		mf.addEdge(e.F.F, e.F.S, e.S.F, e.S.S);
 		capSum += e.S.F;
 	}
-	const int64_t BIG = 1e5;
+	const int64_t BIG = 1e10;
 	mf.addEdge(n, 1, BIG, -BIG);
 	int64_t cost = mf.findMinCostFlow();
 	int64_t flow = 0;
@@ -126,12 +126,12 @@ void testSparseUnitCap(int n) {
 }
 
 void testSparse(int n) {
-	auto G = generateGraph(n, getRand(2*n, 5*n), 10, 10);
+	auto G = generateGraph(n, getRand(2*n, 5*n), 1000, 1000);
 	for (int i = 0; i < n; i++) {
-		G.push_back({{1, getRand(2, n)}, {getRand(1, 10), getRand(1, 10)}});
+		G.push_back({{1, getRand(2, n)}, {getRand(1, 1000), getRand(-5, 1000)}});
 	}
 	for (int i = 0; i < n; i++) {
-		G.push_back({{getRand(1, n-1), n}, {getRand(1, 10), getRand(1, 10)}});
+		G.push_back({{getRand(1, n-1), n}, {getRand(1, 1000), getRand(-5, 1000)}});
 	}
 	auto t1 = testSAPSPFA(n, G);
 	auto t2 = testSAPdijkstra(n, G);
@@ -144,7 +144,7 @@ void testSparse(int n) {
 }
 
 int main() {
-	for (int i=0;i<100000000;i++){
+	for (int i=0;i<20;i++){
 		testSparse(1000);
 	}
 }

@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <algorithm>
 #include "vector.hpp"
+#include "staticheap.hpp"
 
 class ScalingCirculation {
 private:
@@ -17,7 +18,12 @@ private:
 	nstd::Vector<nstd::Vector<int> > g;
 	nstd::Vector<int64_t> potentials;
 	nstd::Vector<nstd::Vector<int> > toAugment;
+	nstd::Vector<int> used;
+	nstd::Vector<int64_t> dist;
+	nstd::StaticHeap dijkstra;
+	nstd::Vector<int> fromP;
 	void augmentEdge(int edge);
+	void fixPotentials();
 public:
 	void addEdge(int from, int to, int64_t capacity, int64_t cost, int id = 0);
 	int64_t findMinCostFlow();
