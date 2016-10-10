@@ -19,6 +19,7 @@ void ScalingCirculation::addEdge(int from, int to, int64_t capacity, int64_t cos
 	g[to].push_back((int)edges.size() - 1);
 }
 
+// Fix potentials to minimal potentials with dijkstra
 void ScalingCirculation::fixPotentials() {
 	nstd::Vector<int64_t> newPotentials(vertices + 1);
 	for (int i = 1; i <= vertices; i++) {
@@ -66,6 +67,7 @@ void ScalingCirculation::fixPotentials() {
 	potentials = newPotentials;
 }
 
+// Increment capacity of edge
 void ScalingCirculation::augmentEdge(int edge) {
 	edges[edge].capacity++;
 	if (edges[edge].capacity > 1) return; // Case 1
@@ -123,18 +125,22 @@ void ScalingCirculation::augmentEdge(int edge) {
 			vertex = edges[fromP[vertex]].from;
 		}
 	}
+	// Fix potentials in order to avoid overflow
 	fixPotentials();
 }
 
 int64_t ScalingCirculation::findMinCostFlow() {
 	for (int b = (int)toAugment.size() - 1; b >= 0; b--){
+		// Scaling
 		for (int i = 0; i < (int)edges.size(); i++) {
 			edges[i].capacity *= 2;
 		}
+		// Increment
 		for (int edge : toAugment[b]) {
 			augmentEdge(edge);
 		}
 	}
+	// Compute the final cost
 	int64_t cost = 0;
 	for (int i = 1; i < (int)edges.size(); i += 2) {
 		cost -= edges[i].cost * edges[i].capacity;
