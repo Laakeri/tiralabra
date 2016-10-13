@@ -142,20 +142,24 @@ std::pair<double, std::pair<int64_t, int64_t> > testScalingCirculation(int n, co
 double tt1,tt2,tt3;
 
 void testSparseUnitCap(int n) {
-	auto G = generateGraph(n, getRand(4*n, 10*n), 1, 100);
+	auto G = generateGraph(n, getRand(4*n, 6*n), 1, 1000);
 	for (int i = 0; i < n; i++) {
-		G.push_back({{1, getRand(2, n)}, {1, getRand(1, 100)}});
+		G.push_back({{1, getRand(2, n)}, {1, getRand(1, 1000)}});
 	}
 	for (int i = 0; i < n; i++) {
-		G.push_back({{getRand(1, n-1), n}, {1, getRand(1, 100)}});
+		G.push_back({{getRand(1, n-1), n}, {1, getRand(1, 1000)}});
 	}
 	auto t1 = testSAPSPFA(n, G);
 	auto t2 = testSAPdijkstra(n, G);
-	if (t1.S != t2.S) {
-		std::cout<<"fail"<<std::endl;
+	auto t3 = testScalingCirculation(n, G);
+	if (t1.S != t2.S || t2.S != t3.S) {
+		std::cout<<"fail "<<t1.S.F<<" "<<t1.S.S<<" "<<t3.S.F<<" "<<t3.S.S<<std::endl;
 		abort();
 	}
-	std::cout<<t1.F<<" "<<t2.F<<" "<<t1.S.F<<" "<<t1.S.S<<std::endl;
+	std::cout<<t1.F<<" "<<t2.F<<" "<<t3.F<<" "<<t1.S.F<<" "<<t1.S.S<<std::endl;
+	tt1+=t1.F;
+	tt2+=t2.F;
+	tt3+=t3.F;
 }
 
 void testDense(int n) {
@@ -180,16 +184,40 @@ void testDense(int n) {
 }
 
 void testSparse(int n) {
-	auto G = generateGraph(n, getRand(2*n, 5*n), 1000, 1000);
+	auto G = generateGraph(n, getRand(2*n, 3*n), 10000, 1000);
 	for (int i = 0; i < n; i++) {
-		G.push_back({{1, getRand(2, n)}, {getRand(1, 1000), getRand(-5, 1000)}});
+		G.push_back({{1, getRand(2, n)}, {getRand(1, 10000), getRand(1, 1000)}});
 	}
 	for (int i = 0; i < n; i++) {
-		G.push_back({{getRand(1, n-1), n}, {getRand(1, 1000), getRand(-5, 1000)}});
+		G.push_back({{getRand(1, n-1), n}, {getRand(1, 10000), getRand(1, 1000)}});
 	}
 	auto t1 = testSAPSPFA(n, G);
 	auto t2 = testSAPdijkstra(n, G);
 	auto t3 = testScalingCirculation(n, G);
+	if (t1.S != t2.S || t2.S != t3.S) {
+		std::cout<<"fail "<<t1.S.F<<" "<<t1.S.S<<" "<<t3.S.F<<" "<<t3.S.S<<std::endl;
+		abort();
+	}
+	std::cout<<t1.F<<" "<<t2.F<<" "<<t3.F<<" "<<t1.S.F<<" "<<t1.S.S<<std::endl;
+	tt1+=t1.F;
+	tt2+=t2.F;
+	tt3+=t3.F;
+}
+
+void testAssignment(int n) {
+	std::vector<std::pair<std::pair<int, int>, std::pair<int64_t, int64_t> > > G;
+	for (int i=1;i<=n;i++){
+		G.push_back({{1, 2*i}, {1, 0}});
+		G.push_back({{2*i+1, 2*n+4}, {1, 0}});
+	}
+	for (int i=1;i<=n;i++){
+		for (int ii=1;ii<=n;ii++){
+			G.push_back({{2*i, 2*i+1}, {1, getRand(1, 10000)}});
+		}
+	}
+	auto t1 = testSAPSPFA(n*2+4, G);
+	auto t2 = testSAPdijkstra(n*2+4, G);
+	auto t3 = testScalingCirculation(n*2+4, G);
 	if (t1.S != t2.S || t2.S != t3.S) {
 		std::cout<<"fail "<<t1.S.F<<" "<<t1.S.S<<" "<<t3.S.F<<" "<<t3.S.S<<std::endl;
 		abort();
@@ -212,13 +240,18 @@ void testPathological(int k) {
 		abort();
 	}
 	std::cout<<t1.F<<" "<<t2.F<<" "<<t3.F<<" "<<t1.S.F<<" "<<t1.S.S<<std::endl;
+	tt1+=t1.F;
+	tt2+=t2.F;
+	tt3+=t3.F;
 }
 
 int main() {
-	std::ofstream out("Densetest.csv");
+	std::ofstream out;
+	int tcs=50;
+	/*
+	out.open("densetest.csv");
 	out<<"n, SAPSPFA, SAPdijkstra, ScalingCirculation"<<std::endl;
 	out<<std::setprecision(2)<<std::fixed;
-	int tcs=10;
 	for (int i=10;i<=250;i+=10){
 		tt1=0;
 		tt2=0;
@@ -231,4 +264,82 @@ int main() {
 		tt3/=(double)tcs;
 		out<<i<<","<<tt1<<","<<tt2<<","<<tt3<<std::endl;
 	}
+	out.close();
+	int tcs=50;
+	out.open("sparsetest.csv");
+	out<<"n, SAPSPFA, SAPdijkstra, ScalingCirculation"<<std::endl;
+	out<<std::setprecision(2)<<std::fixed;
+	for (int i=50;i<=2500;i+=50){
+		tt1=0;
+		tt2=0;
+		tt3=0;
+		for (int t=0;t<tcs;t++){
+			testSparse(i);
+		}
+		tt1/=(double)tcs;
+		tt2/=(double)tcs;
+		tt3/=(double)tcs;
+		out<<i<<","<<tt1<<","<<tt2<<","<<tt3<<std::endl;
+	}
+	out.close();
+	out.open("sparseunitcaptest.csv");
+	out<<"n, SAPSPFA, SAPdijkstra, ScalingCirculation"<<std::endl;
+	out<<std::setprecision(2)<<std::fixed;
+	for (int i=100;i<=4000;i+=100){
+		tt1=0;
+		tt2=0;
+		tt3=0;
+		for (int t=0;t<tcs;t++){
+			testSparseUnitCap(i);
+		}
+		tt1/=(double)tcs;
+		tt2/=(double)tcs;
+		tt3/=(double)tcs;
+		out<<i<<","<<tt1<<","<<tt2<<","<<tt3<<std::endl;
+	}
+	out.close();
+	out.open("assignmenttest.csv");
+	out<<"n, SAPSPFA, SAPdijkstra, ScalingCirculation"<<std::endl;
+	out<<std::setprecision(2)<<std::fixed;
+	for (int i=20;i<=1000;i+=20){
+		tt1=0;
+		tt2=0;
+		tt3=0;
+		for (int t=0;t<tcs;t++){
+			testAssignment(i);
+		}
+		tt1/=(double)tcs;
+		tt2/=(double)tcs;
+		tt3/=(double)tcs;
+		out<<i<<","<<tt1<<","<<tt2<<","<<tt3<<std::endl;
+	}
+	out.close();
+	*/
+	out.open("pathologicaltest.csv");
+	out<<"n, SAPSPFA, SAPdijkstra, ScalingCirculation"<<std::endl;
+	out<<std::setprecision(2)<<std::fixed;
+	tcs=1;
+	for (int i=2;i<=40;i++){
+		tt1=0;
+		tt2=0;
+		tt3=0;
+		for (int t=0;t<tcs;t++){
+			testPathological(i);
+		}
+		tt1/=(double)tcs;
+		tt2/=(double)tcs;
+		tt3/=(double)tcs;
+		out<<i<<","<<tt1<<","<<tt2<<","<<tt3<<std::endl;
+	}
+	out.close();
 }
+
+
+
+
+
+
+
+
+
+
