@@ -1,0 +1,7 @@
+set size 1.0, 1.0
+set terminal postscript eps enhanced color font 'Helvetica,20'
+set output 'out.eps'
+replot
+
+set terminal x11
+set size 1,1
