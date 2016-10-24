@@ -126,7 +126,7 @@ on olemassa, sillä potentiaalifunktioksi voidaan ottaa $p(u)$ on lyhimmän reit
 solmusta $s$ solmuun $u$.
 Määritellään että kaaren $uv$ \textit{vähennetty hinta} on $C_{fr}(uv) = p(u) + C_f(uv) - p(v)$.
 Nähdään että syklin hinta vähennetyissä hinnoissa on sama kuin syklin hinta koska potentiaalit
-mitätöivät toisensa. Nähdään myös
+kumoavat toisensa. Nähdään myös
 että kaikki vähennetyt hinnat ovat epänegatiivisia, josta on helppo nähdä että jos on
 olemassa potentiaalifunktio, niin negatiivisia syklejä ei ole.\\\\
 \noindent
@@ -165,8 +165,8 @@ avulla voidaan muuttaa kaikkien kaarien hinnat epänegatiivisiksi.
 Vaikka jäännösverkko muuttuu, potentiaalifunktion voi päivittää helposti päteväksi
 käyttämällä lyhimpiä polkuja jotka kuitenkin lasketaan kun lähetetään virtausta.
 Jos jäännösverkossa olevan $s \rightsquigarrow t$-polun pituus on $L$, niin
-sen pituus vähennetyissä hinnoissa on $L + p(s) - p(t)$, koska kaikki muut potentiaalit
-mitätöivät toisensa. Seuraa että lyhimmän 
+sen pituus vähennetyissä hinnoissa on $L + p(s) - p(t)$ koska kaikki muut potentiaalit
+kumoavat toisensa. Seuraa että lyhimmän 
 $s \rightsquigarrow t$ polun voi yhtä hyvin hakea vähennettyjen hintojen verkossa.\\
 Saadaan nopeampi algoritmi: Etsitään ensin joku potentiaalifunktio Bellman-Ford-algoritmilla.
 Sen jälkeen käytetään Dijkstran algoritmia vähennettyjen hintojen verkossa augmentoivien polkujen
