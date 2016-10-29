@@ -8,7 +8,7 @@ Algoritmi joka laskee mincost-flow:n käyttäen shortest-augmenting-path algorit
 ### ScalingCirculation
 Algoritmi joka laskee mincost-circulaation käyttäen kapasiteettiskaalaavaa algoritmia
 
-Ongelmien määritelmät ja algoritmien teoria löytyy [algoritmit.pdf](https://github.com/Laakeri/tiralabra/blob/master/algoritmit.pdf)
+Ongelmien määritelmät ja algoritmien teoria löytyy [algoritmit.pdf](https://github.com/Laakeri/tiralabra/blob/master/algoritmit.pdf). Suorituskykytestausdokumentti löytyy [testaus.pdf](https://github.com/Laakeri/tiralabra/blob/master/testaus.pdf).
 
 ## Käyttö
 Kääntäminen pitäisi onnistua linuxilla kirjoittamalla make kansiossa src.
