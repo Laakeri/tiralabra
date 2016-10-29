@@ -20,7 +20,8 @@ Sen jälkeen ohjelma lukee syötteen standardisyötteestä. Ensin syötteessä a
 Kun syöte on luettu, ohjelma ratkaiseen ongelman ja tulostaa vastauksen. Vastauksessa tulostetaan virtauksen määrä kaarissa samassa järjestyksessä kuin kaaret annettiin syötteessä.
 ### Esimerkkejä:
 
-./main SAPSPFA
+	./main SAPSPFA
+
 Syöte:
 
 	4 5
@@ -41,7 +42,8 @@ Tuloste:
 	0
 	1
 
-./main SAPDijkstra
+	./main SAPDijkstra
+
 Syöte:
 
 	4 5
@@ -62,7 +64,8 @@ Tuloste:
 	2
 	1
 
-./main ScalingCirculation
+	./main ScalingCirculation
+
 Syöte:
 
 	10 12
