@@ -22,6 +22,7 @@ Kun syöte on luettu, ohjelma ratkaiseen ongelman ja tulostaa vastauksen. Vastau
 
 ./main SAPSPFA
 Syöte:
+
 	4 5
 	1 4 1000
 	1 2 3 2
@@ -31,6 +32,7 @@ Syöte:
 	2 4 1 1
 
 Tuloste:
+
 	Flow: 4
 	Cost: 22
 	2
@@ -41,6 +43,7 @@ Tuloste:
 
 ./main SAPDijkstra
 Syöte:
+
 	4 5
 	1 4 3
 	1 2 3 2
@@ -50,6 +53,7 @@ Syöte:
 	2 4 1 1
 
 Tuloste:
+
 	Flow: 3
 	Cost: 13
 	1
@@ -60,6 +64,7 @@ Tuloste:
 
 ./main ScalingCirculation
 Syöte:
+
 	10 12
 	1 2 3 2 
 	1 3 2 3
@@ -75,6 +80,7 @@ Syöte:
 	10 8 3 -2
 
 Tuloste:
+
 	Cost: -3
 	1
 	0
