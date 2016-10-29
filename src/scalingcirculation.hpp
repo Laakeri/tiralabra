@@ -23,8 +23,9 @@ private:
 	nstd::Vector<int> fromP;
 	void augmentEdge(int edge);
 	void fixPotentials();
-public:
 	nstd::Vector<Edge> edges;
+public:
+	nstd::Vector<int64_t> getSolution();
 	void addEdge(int from, int to, int64_t capacity, int64_t cost, int id = 0);
 	int64_t findMinCostFlow();
 	ScalingCirculation(int vertices_);

@@ -18,6 +18,7 @@ private:
 	int64_t augment(int x, int64_t flow, const nstd::Vector<int>& from);
 	std::pair<int64_t, int64_t> findAugmentingPath(int64_t maxAugment);
 public:
+	nstd::Vector<int64_t> getSolution();
 	void addEdge(int from, int to, int64_t capacity, int64_t cost, int id = 0);
 	std::pair<int64_t, int64_t> pushFlow(int64_t flowAmount);
 	MinCostFlowSAPSPFA(int vertices_, int source_, int sink_);

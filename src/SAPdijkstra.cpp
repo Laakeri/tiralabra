@@ -107,6 +107,13 @@ std::pair<int64_t, int64_t> MinCostFlowSAPDijkstra::pushFlow(int64_t flowAmount)
 	return {flow, cost};
 }
 
+nstd::Vector<int64_t> MinCostFlowSAPDijkstra::getSolution() {
+	nstd::Vector<int64_t> ret(edges.size());
+	for (unsigned i = 0; i < edges.size(); i+=2) {
+		ret[i/2] = edges[i^1].capacity;
+	}
+	return ret;
+}
 
 MinCostFlowSAPDijkstra::MinCostFlowSAPDijkstra(int vertices_, int source_, int sink_) :
 vertices(vertices_), source(source_), sink(sink_), g(vertices + 1), potentials(vertices + 1) {

@@ -148,6 +148,14 @@ int64_t ScalingCirculation::findMinCostFlow() {
 	return cost;
 }
 
+nstd::Vector<int64_t> ScalingCirculation::getSolution() {
+	nstd::Vector<int64_t> ret(edges.size());
+	for (unsigned i = 0; i < edges.size(); i+=2) {
+		ret[i/2] = edges[i^1].capacity;
+	}
+	return ret;
+}
+
 ScalingCirculation::ScalingCirculation(int vertices_) :
 vertices(vertices_), g(vertices + 1), potentials(vertices + 1), used(vertices + 1), dist(vertices + 1), dijkstra(vertices + 1), fromP(vertices + 1) {
 }
