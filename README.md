@@ -41,7 +41,7 @@ Tuloste:
 	2
 	0
 	1
-#
+####
 	./main SAPDijkstra
 
 Syöte:
@@ -63,7 +63,7 @@ Tuloste:
 	0
 	2
 	1
-#
+####
 	./main ScalingCirculation
 
 Syöte:
