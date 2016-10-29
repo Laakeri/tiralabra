@@ -15,7 +15,7 @@ Kääntäminen pitäisi onnistua linuxilla kirjoittamalla make kansiossa src.
 
 Ohjelmaa voi käyttää kirjoittamalla ./main [Algoritmi]. [Algoritmi] kohdalle laitetaan algoritmi jota käytetään esim. ./main SAPDijkstra
 
-Sen jälkeen ohjelma lukee syötteen standardisyötteestä. Ensin syötteessä annetaan kaksi lukua, solmujen määrä ja kaarien määrä. Jos algoritmi on SAPSPFA tai SAPDijkstra annetaan sen jälkeen kolme lukua, lähdesolmu, kohdesolmu ja virtauksen määrä. Solmuilla käytetään ykkösindeksointia, eli solmut on numeroitu 1..n. Jos halutaan maksimivirtauksen, virtauksen määräksi laitetaan joku iso luku. Sen jälkeen annetaan m riviä eli verkon kaaret. Kaaret annetaan muodossa [lähtö kohde kapasiteetti hinta].
+Sen jälkeen ohjelma lukee syötteen standardisyötteestä. Ensin syötteessä annetaan kaksi lukua, solmujen määrä ja kaarien määrä. Jos algoritmi on SAPSPFA tai SAPDijkstra annetaan sen jälkeen kolme lukua, lähdesolmu, kohdesolmu ja virtauksen määrä. Solmuilla käytetään ykkösindeksointia, eli solmut on numeroitu 1..n. Jos halutaan maksimivirtaus, virtauksen määräksi laitetaan joku iso luku. Sen jälkeen annetaan m riviä eli verkon kaaret. Kaaret annetaan muodossa [lähtö kohde kapasiteetti hinta].
 
 Kun syöte on luettu, ohjelma ratkaiseen ongelman ja tulostaa vastauksen. Vastauksessa tulostetaan virtauksen määrä kaarissa samassa järjestyksessä kuin kaaret annettiin syötteessä.
 ### Esimerkkejä:
