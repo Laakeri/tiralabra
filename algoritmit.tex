@@ -154,9 +154,10 @@ toimii kaikilla uusilla kaarilla jotka ilmestyivät jäännösverkkoon.
 \subsection*{Aikavaativuus}
 Tässä määritelty SAP-algoritmi ei anna mitään tietoa tarvittavien augmentoivien
 polkujen määrästä. Nähdään kuitenkin että virtauksen määrä kasvaa ainakin yhdellä, joten
-augmentoivia polkuja on maksimissaan $k$. Periaatteessa virtausta voi lähettää 
-korkeintaan $Um$ yksikköä, jossa $U$ on verkon suurin kapasiteetti. Lyhyimmän reitin
-etsiminen ei ole suoraviivaista koska verkossa on negatiivisia kaaria. Lyhyimmän reitin
+augmentoivia polkuja on maksimissaan $k$. Sanotaan että verkossa on $n$ solmua,
+$m$ kaarta ja suurin kaaren kapasiteetti on $U$. Periaatteessa virtausta voi lähettää 
+korkeintaan $Um$ yksikköä. Lyhimmän reitin
+etsiminen ei ole suoraviivaista koska verkossa on negatiivisia kaaria. Lyhimmän reitin
 verkossa jossa on negatiivisia kaaria
 voi etsiä Bellman-Ford-algoritmilla, jonka aikavaativuus on $O(nm)$.
 Kokonaisaikavaativuudeksi tulee $O(Um^2n)$. Käytännössä käytetään
@@ -196,7 +197,9 @@ $uv$ toteuttaa ehdot aina ja sen hinta on $0$.
 Aiemmin esitellyt algoritmit mincost-flow-ongelmalle eivät toimi polynomisessa ajassa,
 sillä niiden aikavaativuuksissa on kerroin $U$, joka voi olla eksponentiaalinen suhteessa
 syötteen pituuteen. Nyt esitetään Mincost-circulation-ongelmalle polynomisessa ajassa toimiva
-algoritmi jonka aikavaativuudessa on kerroin $\log U$ kertoimen $U$ sijasta.
+algoritmi jonka aikavaativuudessa on kerroin $\log U$ kertoimen $U$ sijasta. Algoritmissa
+tullaan käyttämään samaa määritelmää jäännösverkolle, potentiaalifunktiolle ja vähennettyjen
+hintojen verkolle kuin aiemmin esitellyssä SAP-algoritmissa.
 \subsection*{Skaalaus}
 Skaalaavat algoritmit yleensä ratkaisevat ongelman ottamalla ensin huomioon vain syötteen
 eniten merkitsevät bitit ja lisäämällä ratkaisun tarkkuutta bitti kerrallaan. Käytetään
@@ -249,12 +252,12 @@ Tässä tapauksessa potentiaalifunktiota
 täytyy päivittää ja negatiivisia syklejä voi syntyä. 
 Ennen kuin kasvatetaan kaaren $uv$ kapasiteettia
 lasketaan lyhin reitti solmusta $v$ kaikkiin solmuihin vähennettyjen hintojen verkossa.
-Sanotaan että lyhin reitti solmusta $v$ solmuun $w$ vähennettyjen hintojen verkossa
+Sanotaan että lyhimmän reitin pituus solmusta $v$ solmuun $w$ vähennettyjen hintojen verkossa
 on $sp(w)$. Jos solmusta $v$ ei ole reittiä solmuun $w$ niin $sp(w)$ on joku riittävän
 suuri vakio.
 \subsubsection*{2.1. Negatiivista sykliä ei syntynyt}
 Jos syntyy negatiivinen sykli, niin se kulkee ensin uutta kaarta $uv$ pitkin ja sitten
-lyhintä reittiä solmusta $v$ solmuun $u$. Siis tarkistamalla lyhimmän reitin pituuden solmusta
+lyhintä reittiä solmusta $v$ solmuun $u$. Tarkistamalla lyhimmän reitin pituuden solmusta
 $v$ solmuun $u$ voidaan selvittää syntyikö negatiivista sykliä. Toisin sanoen negatiivista
 sykliä ei syntynyt jos $sp(u) + p(u) + C(uv) - p(v) \ge 0$. Potentiaalifunktio
 pitää kuitenkin korjata vaikka negatiivista sykliä ei syntynyt. Asetetaan uudeksi
@@ -262,13 +265,52 @@ potentiaalifunktioksi $p'(w) = p(w) + sp(w)$. Tämä toteuttaa
 potentiaalifunktion ehdot kaikilla jäännösverkossa jo olevilla kaarilla $wz$ koska 
 $sp(w) + C_{fr}(wz) \ge sp(z)$ koska $sp$ on lyhin-reitti-funktio
 joten $p(w) + sp(w) + C_f(wz) \ge p(z) + sp(z)$ joten $p'(w) + C_f(wz) \ge p'(z)$.
-(Huomaa että tämä pätee myös jos solmusta $u$ ei ole reittiä solmuun $w$ koska vähennetyt
+(Huomaa että tämä pätee myös jos solmusta $v$ ei ole reittiä solmuun $w$ koska vähennetyt
 hinnat ovat epänegatiivisia.) Uusi potentiaalifunktio toteuttaa potentiaalifunktion
 ehdot myös uudella kaarella $uv$ koska $sp(u) + p(u) + C(uv) - p(v) \ge 0$ joten
 $p(u) + sp(u) + C_f(uv) \ge p(v) + sp(v)$ koska $sp(v) = 0$ ja $C_f(uv) = C(uv)$
 joten $p'(u) + C_f(uv) \ge p'(v)$.
 \subsubsection*{2.2. Negatiivinen sykli syntyi}
-TODO
+Negatiivinen sykli syntyy jos $sp(u) + p(u) + C(uv) - p(v) < 0$. Tässä tapauksessa 
+virtausta lähetetään yksi yksikkö sykliä joka koostuu kaaresta $uv$ ja lyhimmästä
+$v \rightsquigarrow u$-polusta pitkin. Kun virtausta on lähetetty tätä sykliä
+pitkin, verkossa ei ole enää negatiivisia syklejä. Todistetaan se näyttämällä pätevä
+potentiaalifunktio. Jälleen kerran uusi potentiaalifunktio on $p'(w) = p(w) + sp(w)$.
+Edellisen kohdan analyysin perusteella tämä potentiaalifunktio on pätevä kaikille 
+jäännösverkossa jo olleille kaarille. Jäännösverkkoon kuitenkin saattoi ilmestyä
+uusia kaaria jotka menevät vastakkaiseen suuntaan lyhintä $v \rightsquigarrow u$-polkua.
+Otetaan lyhimmällä $v \rightsquigarrow u$-polulla peräkkäin olevat solmut $w$ ja $z$.
+Nyt $sp(z) = sp(w) + C_{fr}(wz)$ joten $sp(z) = sp(w) + p(w) + C_f(wz) - p(z)$ joten
+$p(z) + sp(z) = p(w) + sp(w) + C_f(wz)$ joten $p'(z) = p'(w) + C_f(wz)$ joten 
+$p'(z) + C_f(zw) = p'(w)$ eli potentiaalifunktio pätee kaarilla jotka menevät 
+vastakkaiseen suuntaan lyhintä $v \rightsquigarrow u$-polkua. Lisäksi jäännösverkkoon
+tulee kaari $vu$. $sp(u) + p(u) + C(uv) - p(v) < 0$ joten 
+$sp(u) + p(u) + C(uv) < p(v)$ joten $p(v) + C(vu) > p(u) + sp(u)$ joten
+$p'(v) + C(vu) > p'(u)$ koska $sp(v) = 0$.
+\\\\
+\noindent
+Nyt kaikkiin yhden kaaren augmentoinnissa tapahtuviin tapauksiin on esitetty ja analysoitu
+algoritmi joten augmentointivaihe on valmis. Täten koko algoritmi on valmis, koska siirtymä
+vaiheesta $i$ vaiheeseen $i+1$ on esitetty kokonaan ja on todettu että vaiheen 0 ratkaisu
+on triviaali.
+\subsection*{Aikavaativuus}
+Algoritmissa on $\log_2 U$ vaihetta. Jokaisessa vaiheessa augmentointi dominoi aikavaativuutta.
+Jokaisessa vaiheessa augmentoidaan korkeintaan
+$m$ kaarta. Kaaren augmentoinnissa haetaan lyhimmät reitit vähennettyjen hintojen
+verkossa jossa siihen voi käyttää Dijkstran algoritmia, eli lyhimpien reittien haun
+aikavaativuudeksi tulee $O(m \log n)$. Yhteensä aikavaativuudeksi tulee $O(\log U m^2 \log n)$, joka
+on polynominen aikavaativuus ja teoriassa parempi kuin aiemmin esitetyt algoritmit mincost-flow-ongelmaan.
+Vertailun vuoksi maksimivirtauksen laskemiseen käytetyn Edmonds-Karp algoritmin aikavaativuus
+on $O(m^2n)$.
+\subsection*{Lisähuomio potentiaaleista}
+Monessa kohdassa solmujen potentiaaleihin lisätään jotain epämääräisiä lukuja joiden suuruutta
+algoritmin aikana ei ole analysoitu. Potentiaalien kasvaminen räjähdysmäisesti osoittautuu
+myös käytännön ongelmaksi. Potentiaalifunktion kuitenkin pystyy korjaamaan $O(m \log n)$ ajassa
+seuraavalla tavalla: Otetaan joku solmu $v$ jonka potentiaalia ei ole vielä korjattu. Lasketaan siitä
+Dijkstran ja potentiaalifunktion avulla lyhimmät polut solmuihin joihin pääsee siitä ja joita ei ole
+vielä käsitelty. Asetetaan näiden solmujen potentiaaliksi lyhin reitti solmusta $v$ + 
+suurin korjattu potentiaali ennen tätä vaihetta. Nyt saadaan pätevä potentiaalifunktio, jonka
+itseisarvo on kaikissa solmuissa korkeintaan $nC$, jossa $C$ on suurin hintojen itseisarvo.
 \end{document}
 
 
