@@ -184,7 +184,7 @@ Mincost-flow käyttäen Mincost-circulationia, voidaan lisätä kyseiseen verkko
 kohdesolmusta lähtösolmuun jonka kapasiteetti on $k$ ja hinta on itseisarvoltaan
 tarpeeksi suuri negatiivinen luku. Määritellään Mincost-circulation-ongelma: 
 Annetaan virtausverkko $G = (V, E, U, C)$, jossa $U(e) \in \mathbb{Z_+}$ on 
-kaaren $e$ kapasiteetti, $C(e) \in \mathbb{R}$ on kaaren $e$ hinta. Tavoitteena on löytää minimihintainen virtaus
+kaaren $e$ kapasiteetti ja $C(e) \in \mathbb{R}$ on kaaren $e$ hinta. Tavoitteena on löytää minimihintainen virtaus
 $f$ jota merkitään funktiona
 $f : E \rightarrow \mathbb{Z}$ joka: \\\\ Minimoi $$\sum_{uv \in E} C(uv) f(uv)$$\\
 Toteuttaa ehdot:\\ Säilyvyysehto
@@ -196,12 +196,13 @@ $uv$ toteuttaa ehdot aina ja sen hinta on $0$.
 \section*{Kapasiteettiskaalaava algoritmi Mincost-circulation-ongelmalle}
 Aiemmin esitellyt algoritmit mincost-flow-ongelmalle eivät toimi polynomisessa ajassa,
 sillä niiden aikavaativuuksissa on kerroin $U$, joka voi olla eksponentiaalinen suhteessa
-syötteen pituuteen. Nyt esitetään Mincost-circulation-ongelmalle polynomisessa ajassa toimiva
-algoritmi jonka aikavaativuudessa on kerroin $\log U$ kertoimen $U$ sijasta. Algoritmissa
+syötteen pituuteen. Nyt esitetään polynomisessa ajassa toimiva
+algoritmi Mincost-circulation-ongelmalle, jonka aikavaativuudessa on 
+kerroin $\log U$ kertoimen $U$ sijasta. Algoritmissa
 tullaan käyttämään samaa määritelmää jäännösverkolle, potentiaalifunktiolle ja vähennettyjen
 hintojen verkolle kuin aiemmin esitellyssä SAP-algoritmissa.
 \subsection*{Skaalaus}
-Skaalaavat algoritmit yleensä ratkaisevat ongelman ottamalla ensin huomioon vain syötteen
+Skaalaavat algoritmit ratkaisevat ongelman ottamalla ensin huomioon vain syötteen
 eniten merkitsevät bitit ja lisäämällä ratkaisun tarkkuutta bitti kerrallaan. Käytetään
 tätä tekniikkaa Mincost-circulation-ongelmaan. Oletetaan että $U(uv) < 2^k$ kaikilla $uv \in E$.
 Skaalaava algoritmi käyttää $k+1$ vaihetta jotka numeroidaan $0 \ldots k$. Vaiheessa 
@@ -210,12 +211,12 @@ alkuperäinen verkko, mutta kapasiteetit ovat $U_i(uv) = \lfloor \frac{U(uv)}{2^
 Jokaisessa vaiheessa ratkaistaan ongelma optimaalisesti sen vaiheen kapasiteeteille joten vaiheen
 $k$ ratkaisu on ongleman ratkaisu.
 Toisin sanoen vaiheessa $i$ ratkaistaan ongelma niin että katsotaan kapasiteettien
-binääriesityksien $i$:tä ensimmäistä bittiä. Vaiheessa $0$ kaikki kapasiteetit ovat $0$ joten
+binääriesityksien $i$:tä eniten merkitsevää bittiä. Vaiheessa $0$ kaikki kapasiteetit ovat $0$ joten
 ratkaisu on triviaali. Ongelmaksi jää siirtyminen vaiheesta $i$ vaiheeseen $i+1$. Sanotaan
 että siirtyminen tehdään kahdessa vaiheessa, skaalausvaiheessa ja augmentointivaiheessa.
 \subsection*{Skaalausvaihe}
 Huomataan että $U_{i+1}(uv) = U_i(uv)*2$ tai $U_{i+1}(uv) = U_i(uv)*2+1$. Voidaan siis ensin kertoa
-kaikkien kaarien kapasiteetit ja niissä kulkeva virtaus kahdella. Flow toteuttaa edelleen
+kaikkien kaarien kapasiteetit ja niissä kulkeva virtaus kahdella. Virtaus toteuttaa edelleen
 kaikki ehdot ja on optimaalinen.
 \subsection*{Augmentointivaihe}
 Skaalausvaiheen jälkeen oltaisiin valmiita jos $U_{i+1}(uv) = U_i(uv)*2$ toteutuisi kaikilla
@@ -223,7 +224,7 @@ kaarilla. Kuitenkin kaarilla joilla $U_{i+1}(uv) = U_i(uv)*2+1$ pitää lisätä
 vielä yhdellä.
 Kun kasvatetaan tällaisten kaarien kapasiteettia yhdellä yksi kaari kerrallaan 
 ongelma palautuu ongelmaan:
-Annetaan optimaalinen virtaus verkossa. Löydä optimaalinen virtaus kun yhden kaaren 
+Annetaan minimihintainen virtaus verkossa. Löydä minimihintainen virtaus kun yhden kaaren 
 kapasiteettia kasvatetaan yhdellä.
 \subsection*{Augmentointi}
 Muistetaan että virtaus on optimaalinen jos sen jäännösverkossa ei ole negatiivista
@@ -231,9 +232,9 @@ sykliä. Tästä seuraa että kaaren kapasiteetin kasvattamisen jälkeen virtaus
 jos se ei luo uutta negatiivista sykliä jäännösverkkoon. Toisaalta jos kapasiteetin
 kasvattaminen luo negatiivisen syklin jäännösverkkoon niin sitä sykliä pitkin voidaan
 augmentoida virtausta ja saadaan pienempi hinta. Siis kapasiteetin kasvattaminen 
-muuttaa optimaalista virtaus
-jos ja vain jos se luon negatiivisen syklin jäännösverkkoon. 
-
+muuttaa optimaalista virtausta
+jos ja vain jos se luo negatiivisen syklin jäännösverkkoon. \\
+\noindent
 Otetaan jälleen avuksi potentiaalifunktio. Pidetään pätevää potentiaalifunktiota 
 yllä koko algoritmin ajan. Aluksi potentiaalifunktio voi olla $p(u) = 0$ kaikilla $u$.
 Skaalausvaiheessa potentiaalifunktiota ei tarvitse muuttaa koska skaalaus ei luo
@@ -244,7 +245,7 @@ Tarkastellaan tapauksia joita voi käydä kun kaaren $uv$ kapasitettia kasvateta
 yhdellä.
 \subsubsection*{1. Kaari toteuttaa vanhan potentiaalifunktion}
 Jos kaari toteuttaa potentiaalifunktion niin negatiivisia syklejä ei ole
-eikä potentiaalifunktiota tarvi päivittää. Huomaa että tämä tapaus tapahtuu
+eikä potentiaalifunktiota tarvitse päivittää. Huomaa että tämä tapaus tapahtuu
 aina jos kaari $uv$ on jo jäännösverkossa eli $U_f(uv) > 0$ ennen kapasiteetin
 lisäämistä.
 \subsubsection*{2. Kaari rikkoo vanhaa potentiaalifunktiota}
@@ -286,7 +287,8 @@ $p'(z) + C_f(zw) = p'(w)$ eli potentiaalifunktio pätee kaarilla jotka menevät
 vastakkaiseen suuntaan lyhintä $v \rightsquigarrow u$-polkua. Lisäksi jäännösverkkoon
 tulee kaari $vu$. $sp(u) + p(u) + C(uv) - p(v) < 0$ joten 
 $sp(u) + p(u) + C(uv) < p(v)$ joten $p(v) + C(vu) > p(u) + sp(u)$ joten
-$p'(v) + C(vu) > p'(u)$ koska $sp(v) = 0$.
+$p'(v) + C(vu) > p'(u)$ koska $sp(v) = 0$. Huomaa että jäännösverkkoon ei tule kaarta
+$uv$.
 \\\\
 \noindent
 Nyt kaikkiin yhden kaaren augmentoinnissa tapahtuviin tapauksiin on esitetty ja analysoitu
@@ -299,18 +301,22 @@ Jokaisessa vaiheessa augmentoidaan korkeintaan
 $m$ kaarta. Kaaren augmentoinnissa haetaan lyhimmät reitit vähennettyjen hintojen
 verkossa jossa siihen voi käyttää Dijkstran algoritmia, eli lyhimpien reittien haun
 aikavaativuudeksi tulee $O(m \log n)$. Yhteensä aikavaativuudeksi tulee $O(\log U m^2 \log n)$, joka
-on polynominen aikavaativuus ja teoriassa parempi kuin aiemmin esitetyt algoritmit mincost-flow-ongelmaan.
+on polynominen aikavaativuus ja teoriassa parempi kuin aiemmin käsitellyt algoritmit mincost-flow-ongelmaan.
 Vertailun vuoksi maksimivirtauksen laskemiseen käytetyn Edmonds-Karp algoritmin aikavaativuus
 on $O(m^2n)$.
 \subsection*{Lisähuomio potentiaaleista}
 Monessa kohdassa solmujen potentiaaleihin lisätään jotain epämääräisiä lukuja joiden suuruutta
 algoritmin aikana ei ole analysoitu. Potentiaalien kasvaminen räjähdysmäisesti osoittautuu
 myös käytännön ongelmaksi. Potentiaalifunktion kuitenkin pystyy korjaamaan $O(m \log n)$ ajassa
-seuraavalla tavalla: Otetaan joku solmu $v$ jonka potentiaalia ei ole vielä korjattu. Lasketaan siitä
+sellaiseksi että kaikki potentiaalit ovat rajoitettuja suhteessa syötteen kokoon.
+Korjaaminen tapahtuu seuraavalla tavalla: Otetaan joku solmu $v$ jonka potentiaalia 
+ei ole vielä korjattu. Lasketaan siitä
 Dijkstran ja potentiaalifunktion avulla lyhimmät polut solmuihin joihin pääsee siitä ja joita ei ole
 vielä käsitelty. Asetetaan näiden solmujen potentiaaliksi lyhin reitti solmusta $v$ + 
 suurin korjattu potentiaali ennen tätä vaihetta. Nyt saadaan pätevä potentiaalifunktio, jonka
-itseisarvo on kaikissa solmuissa korkeintaan $nC$, jossa $C$ on suurin hintojen itseisarvo.
+itseisarvo on kaikissa solmuissa korkeintaan $nC$, jossa $C$ on suurin hintojen itseisarvo. Korjaaminen
+voidaan tehdä vaikka jokaisen potentiaalien päivityksen jälkeen eikä se vaikuta aikavaativuuteen koska
+Dijkstra ajetaan kuitenkin aina kun potentiaaleja päivitetään.
 \end{document}
 
 
