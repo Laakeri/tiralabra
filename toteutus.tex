@@ -21,6 +21,14 @@ saman vastauksen.
 Lisäksi olen käyttänyt suunnilleen samaa implementaatiota useammissakin kisakoodaustehtävissä
 jotka on testattu hyvällä testidatalla joten olen varma että kyseinen implementaatio
 on kunnossa. Kisakoodausversio implementaatiosta löytyy \hyperref[https://github.com/Laakeri/contestlib/blob/master/src/graph/mincostflow.cpp]{https://github.com/Laakeri/contestlib/blob/master/src/graph/mincostflow.cpp}
+\\\\
+\noindent
+Työssä piti toteuttaa itse dynaaminen taulukko tietorakenne ja jonkinlainen heap
+tietorakenne Dijkstraa varten. Käytin segmenttipuuhun perustuvaa staattista heappia
+joka toimii kivasti Dijkstran kanssa ja on helppo koodata ja nopea koska muistia ei varata dynaamisesti. 
+Staattisessa 
+heapissa on siis $n$ paikkaa, ja voidaan $O(\log n)$ ajassa asettaa jonkun paikan arvo
+ja $O(1)$ ajassa katsoa pienin arvo ja millä paikalla se on. Muistia käytetään $O(n)$.
 \end{document}
 
 
