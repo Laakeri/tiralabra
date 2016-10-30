@@ -1,0 +1,28 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{lipsum} %This package just generates Lorem Ipsum filler text. 
+\usepackage{fullpage} % changes the margin
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\title{Mincost-flow-algoritmit toteutusdokumentti}
+\author{Tuukka Korhonen}
+\date{\today}
+\begin{document}
+\maketitle
+\noindent
+Toteutettiin algoritmit \textsc{SAPSPFA}, \textsc{SAPDijkstra} ja \textsc{ScalingCirculation}.
+Algoritmeista ja ongelman määrittelystä tietoa tiedostossa algoritmit.pdf ja käyttöohje
+githubin markdown muodossa tiedostossa README.md. Testausdokumentti tiedostossa testaus.pdf.
+Yksikkötestejä ei ole koska testasin algoritmeja ICPC 2015 tehtävän Catering testeillä
+ja testasin miljoonilla satunnaisgeneroiduilla testeillä että algoritmit antavat
+saman vastauksen.
+Lisäksi olen käyttänyt suunnilleen samaa implementaatiota useammissakin kisakoodaustehtävissä
+jotka on testattu hyvällä testidatalla joten olen varma että kyseinen implementaatio
+on kunnossa. Kisakoodausversio implementaatiosta löytyy \hyperref[https://github.com/Laakeri/contestlib/blob/master/src/graph/mincostflow.cpp]{https://github.com/Laakeri/contestlib/blob/master/src/graph/mincostflow.cpp}
+\end{document}
+
+
+
+
