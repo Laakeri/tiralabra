@@ -20,7 +20,7 @@ $u$ solmuun $v$. Oletetaan tämä merkintä yksikäsitteiseksi eli
 kahden solmun välillä ei
 saa olla useaa kaarta. Lisäksi oletetaan että jos verkossa on kaari $uv$, siinä
 ei ole kaarta $vu$. Nämä oletukset ovat vain teoriaa varten ja niitä ei tehdä
-implementaatiossa. \textsc{Mincost-flow}-ongelmassa tavoitteena on löytää virtaus jota 
+implementaatiossa. \textsc{Mincost-flow}-ongelmassa tavoitteena on löytää minimihintainen virtaus jota 
 nyt merkitään funktiona
 $f : E \rightarrow \mathbb{Z}$ joka: \\\\ Minimoi $$\sum_{uv \in E} C(uv) f(uv)$$\\
 Toteuttaa ehdot:\\ Säilyvyysehto
@@ -85,7 +85,7 @@ Jos jäännösverkossa on polku $s \rightsquigarrow t$ jonka pienin kapasiteetti
 on $u$, niin sitä polkua pitkin voidaan lähettää maksimissaan $u$ yksikköä
 virtausta ja yhden lähetetyn virtausyksikön hinnaksi tulee polun kaarien hintojen summa.
 Tämä kasvattaa virtauksen määrää. Toinen sallittu tapa muuttaa virtausta
-on lähettää virtausta jotain jäännösverkon sykliä pitkin, maksimissaam syklin pienimmän
+on lähettää virtausta jotain jäännösverkon sykliä pitkin, maksimissaan syklin pienimmän
 kapasiteetin verran. Laskemalla voidaan tarkistaa että nämä muutokset säilyttävät
 virtauksen säilyvyys- ja kapasiteettiehdot.
 \subsection*{SAP-algoritmi}
@@ -106,7 +106,8 @@ Seuraavaksi todistetaan nämä väitteet.
 hinta on negatiivinen.\\\\
 \noindent
 \textbf{Todistus:} Olkoon $f$ joku $k$-virtaus niin että $G_f$:ssä ei ole negatiivista
-sykliä. Olkoon $f'$ joku $k$-virtaus jonka hinta on pienempi kuin $f$:n hinta. Määritellään
+sykliä. Oletetaan että on olemassa virtaus $f'$, joka on $k$-virtaus ja jonka hinta on pienempi 
+kuin $f$:n hinta. Määritellään
 $(f' - f)(uv) = f'(uv) - f(uv)$. Nyt $f' - f$ on virtaus joka toteuttaa säilyvyysehdon kaikissa 
 solmuissa, mukaan lukien lähtö- ja kohdesolmut, koska $f'$ ja $f$ ovat molemmat $k$-virtauksia.
 Virtauksen $f' - f$ hinta on negatiivinen. Lisäksi $f' - f$ on sallittu
@@ -143,6 +144,8 @@ Uusi potentiaalifunktio on $p'(u) = p(u) + sp(u)$. Tämä toteuttaa potentiaalif
 ehdot kaikilla kaarilla jotka olivat jo jäännösverkossa koska $sp(u) + C_{fr}(uv) \ge sp(v)$
 koska $sp$ on lyhin-reitti-funktio joten $sp(u) + p(u) + C_f(uv) - p(v) \ge sp(v)$
 joten $sp(u) + p(u) + C_f(uv) \ge sp(v) + p(v)$ joten $p'(u) + C_f(uv) \ge p'(v)$.
+(Huomaa että tämä pätee myös jos solmusta $s$ ei ole reittiä solmuun $u$ koska vähennetyt
+hinnat ovat epänegatiivisia.)
 Lisäksi verkkoon saattoi ilmestyä uusia kaaria kun lyhintä $s \rightsquigarrow t$ polkua
 päinvastaiseen suuntaan menevien kaarien kapasiteetti kasvoi. Kun $u$ ja $v$ ovat
 lyhimmällä polulla peräkkäin olevat solmut, $sp(u) + C_{fr}(uv) = sp(v)$ joten
@@ -171,6 +174,101 @@ $s \rightsquigarrow t$ polun voi yhtä hyvin hakea vähennettyjen hintojen verko
 Saadaan nopeampi algoritmi: Etsitään ensin joku potentiaalifunktio Bellman-Ford-algoritmilla.
 Sen jälkeen käytetään Dijkstran algoritmia vähennettyjen hintojen verkossa augmentoivien polkujen
 löytämiseen ja potentiaalifunktion päivittämiseen. Algoritmin aikavaativuus on \\$O(nm + Um^2 \log n)$.
+\section*{Mincost-circulation}
+Käytetään nimeä \textsc{Mincost-circulation} yleisemmästä versiosta ongelmalle jossa pitää
+laskea minimihintainen virtaus. Mincost-circulation-ongelmassa sallitaan että
+verkossa on syklejä joiden hinta on negatiivinen. Tämä tekee lähtö- ja kohdesolmujen
+ja virtauksen määrän määrittämisestä turhaa, koska jos halutaan laskea aiemmin määritelty
+Mincost-flow käyttäen Mincost-circulationia, voidaan lisätä kyseiseen verkkoon kaari 
+kohdesolmusta lähtösolmuun jonka kapasiteetti on $k$ ja hinta on itseisarvoltaan
+tarpeeksi suuri negatiivinen luku. Määritellään Mincost-circulation-ongelma: 
+Annetaan virtausverkko $G = (V, E, U, C)$, jossa $U(e) \in \mathbb{Z_+}$ on 
+kaaren $e$ kapasiteetti, $C(e) \in \mathbb{R}$ on kaaren $e$ hinta. Tavoitteena on löytää minimihintainen virtaus
+$f$ jota merkitään funktiona
+$f : E \rightarrow \mathbb{Z}$ joka: \\\\ Minimoi $$\sum_{uv \in E} C(uv) f(uv)$$\\
+Toteuttaa ehdot:\\ Säilyvyysehto
+$$\sum_{v \in V} f(uv) = \sum_{v \in V} f(vu) \text{ kaikilla } u \in V$$
+\\Kapasiteettiehto
+$$0 \le f(uv) \le U(uv) \text{ kaikilla } uv \in E$$
+Huomaa että optimaalinen hinta ei ole koskaan positiivinen koska $f(uv) = 0$ kaikilla
+$uv$ toteuttaa ehdot aina ja sen hinta on $0$.
+\section*{Kapasiteettiskaalaava algoritmi Mincost-circulation-ongelmalle}
+Aiemmin esitellyt algoritmit mincost-flow-ongelmalle eivät toimi polynomisessa ajassa,
+sillä niiden aikavaativuuksissa on kerroin $U$, joka voi olla eksponentiaalinen suhteessa
+syötteen pituuteen. Nyt esitetään Mincost-circulation-ongelmalle polynomisessa ajassa toimiva
+algoritmi jonka aikavaativuudessa on kerroin $\log U$ kertoimen $U$ sijasta.
+\subsection*{Skaalaus}
+Skaalaavat algoritmit yleensä ratkaisevat ongelman ottamalla ensin huomioon vain syötteen
+eniten merkitsevät bitit ja lisäämällä ratkaisun tarkkuutta bitti kerrallaan. Käytetään
+tätä tekniikkaa Mincost-circulation-ongelmaan. Oletetaan että $U(uv) < 2^k$ kaikilla $uv \in E$.
+Skaalaava algoritmi käyttää $k+1$ vaihetta jotka numeroidaan $0 \ldots k$. Vaiheessa 
+$i$ verkko on muuten sama kuin 
+alkuperäinen verkko, mutta kapasiteetit ovat $U_i(uv) = \lfloor \frac{U(uv)}{2^{k-i}} \rfloor$.
+Jokaisessa vaiheessa ratkaistaan ongelma optimaalisesti sen vaiheen kapasiteeteille joten vaiheen
+$k$ ratkaisu on ongleman ratkaisu.
+Toisin sanoen vaiheessa $i$ ratkaistaan ongelma niin että katsotaan kapasiteettien
+binääriesityksien $i$:tä ensimmäistä bittiä. Vaiheessa $0$ kaikki kapasiteetit ovat $0$ joten
+ratkaisu on triviaali. Ongelmaksi jää siirtyminen vaiheesta $i$ vaiheeseen $i+1$. Sanotaan
+että siirtyminen tehdään kahdessa vaiheessa, skaalausvaiheessa ja augmentointivaiheessa.
+\subsection*{Skaalausvaihe}
+Huomataan että $U_{i+1}(uv) = U_i(uv)*2$ tai $U_{i+1}(uv) = U_i(uv)*2+1$. Voidaan siis ensin kertoa
+kaikkien kaarien kapasiteetit ja niissä kulkeva virtaus kahdella. Flow toteuttaa edelleen
+kaikki ehdot ja on optimaalinen.
+\subsection*{Augmentointivaihe}
+Skaalausvaiheen jälkeen oltaisiin valmiita jos $U_{i+1}(uv) = U_i(uv)*2$ toteutuisi kaikilla
+kaarilla. Kuitenkin kaarilla joilla $U_{i+1}(uv) = U_i(uv)*2+1$ pitää lisätä kapasiteettia 
+vielä yhdellä.
+Kun kasvatetaan tällaisten kaarien kapasiteettia yhdellä yksi kaari kerrallaan 
+ongelma palautuu ongelmaan:
+Annetaan optimaalinen virtaus verkossa. Löydä optimaalinen virtaus kun yhden kaaren 
+kapasiteettia kasvatetaan yhdellä.
+\subsection*{Augmentointi}
+Muistetaan että virtaus on optimaalinen jos sen jäännösverkossa ei ole negatiivista
+sykliä. Tästä seuraa että kaaren kapasiteetin kasvattamisen jälkeen virtaus on edelleen optimaalinen
+jos se ei luo uutta negatiivista sykliä jäännösverkkoon. Toisaalta jos kapasiteetin
+kasvattaminen luo negatiivisen syklin jäännösverkkoon niin sitä sykliä pitkin voidaan
+augmentoida virtausta ja saadaan pienempi hinta. Siis kapasiteetin kasvattaminen 
+muuttaa optimaalista virtaus
+jos ja vain jos se luon negatiivisen syklin jäännösverkkoon. 
+
+Otetaan jälleen avuksi potentiaalifunktio. Pidetään pätevää potentiaalifunktiota 
+yllä koko algoritmin ajan. Aluksi potentiaalifunktio voi olla $p(u) = 0$ kaikilla $u$.
+Skaalausvaiheessa potentiaalifunktiota ei tarvitse muuttaa koska skaalaus ei luo
+uusia kaaria jäännösverkkoon eivätkä kaarien hinnat muutu.
+
+\subsubsection*{Tapaukset}
+Tarkastellaan tapauksia joita voi käydä kun kaaren $uv$ kapasitettia kasvatetaan 
+yhdellä.
+\subsubsection*{1. Kaari toteuttaa vanhan potentiaalifunktion}
+Jos kaari toteuttaa potentiaalifunktion niin negatiivisia syklejä ei ole
+eikä potentiaalifunktiota tarvi päivittää. Huomaa että tämä tapaus tapahtuu
+aina jos kaari $uv$ on jo jäännösverkossa eli $U_f(uv) > 0$ ennen kapasiteetin
+lisäämistä.
+\subsubsection*{2. Kaari rikkoo vanhaa potentiaalifunktiota}
+Tässä tapauksessa potentiaalifunktiota
+täytyy päivittää ja negatiivisia syklejä voi syntyä. 
+Ennen kuin kasvatetaan kaaren $uv$ kapasiteettia
+lasketaan lyhin reitti solmusta $v$ kaikkiin solmuihin vähennettyjen hintojen verkossa.
+Sanotaan että lyhin reitti solmusta $v$ solmuun $w$ vähennettyjen hintojen verkossa
+on $sp(w)$. Jos solmusta $v$ ei ole reittiä solmuun $w$ niin $sp(w)$ on joku riittävän
+suuri vakio.
+\subsubsection*{2.1. Negatiivista sykliä ei syntynyt}
+Jos syntyy negatiivinen sykli, niin se kulkee ensin uutta kaarta $uv$ pitkin ja sitten
+lyhintä reittiä solmusta $v$ solmuun $u$. Siis tarkistamalla lyhimmän reitin pituuden solmusta
+$v$ solmuun $u$ voidaan selvittää syntyikö negatiivista sykliä. Toisin sanoen negatiivista
+sykliä ei syntynyt jos $sp(u) + p(u) + C(uv) - p(v) \ge 0$. Potentiaalifunktio
+pitää kuitenkin korjata vaikka negatiivista sykliä ei syntynyt. Asetetaan uudeksi
+potentiaalifunktioksi $p'(w) = p(w) + sp(w)$. Tämä toteuttaa
+potentiaalifunktion ehdot kaikilla jäännösverkossa jo olevilla kaarilla $wz$ koska 
+$sp(w) + C_{fr}(wz) \ge sp(z)$ koska $sp$ on lyhin-reitti-funktio
+joten $p(w) + sp(w) + C_f(wz) \ge p(z) + sp(z)$ joten $p'(w) + C_f(wz) \ge p'(z)$.
+(Huomaa että tämä pätee myös jos solmusta $u$ ei ole reittiä solmuun $w$ koska vähennetyt
+hinnat ovat epänegatiivisia.) Uusi potentiaalifunktio toteuttaa potentiaalifunktion
+ehdot myös uudella kaarella $uv$ koska $sp(u) + p(u) + C(uv) - p(v) \ge 0$ joten
+$p(u) + sp(u) + C_f(uv) \ge p(v) + sp(v)$ koska $sp(v) = 0$ ja $C_f(uv) = C(uv)$
+joten $p'(u) + C_f(uv) \ge p'(v)$.
+\subsubsection*{2.2. Negatiivinen sykli syntyi}
+TODO
 \end{document}
 
 
