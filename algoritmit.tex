@@ -12,9 +12,9 @@
 \maketitle
 \noindent
 \section*{Mincost-flow}
-Annetaan virtausverkko $G = (V, E, U, C, s, t)$, jossa $U(e) \in \mathbb{Z_+}$ on 
+Olkoon $G = (V, E, U, C, s, t)$ virtausverkko, jossa $U(e) \in \mathbb{Z_+}$ on 
 kaaren $e$ kapasiteetti, $C(e) \in \mathbb{R}$ on kaaren $e$ hinta ja $s$ ja $t$
-ovat lähtö- ja kohdesolmut. Annetaan lisäksi kokonaisluku $k$ joka tarkoittaa
+ovat lähtö- ja kohdesolmut. Lisäksi olkoon $k$ kokonaisluku joka tarkoittaa
 kuinka paljon virtausta lähetetään. Merkinnällä $uv$ tarkoitetaan kaarta solmusta
 $u$ solmuun $v$. Oletetaan tämä merkintä yksikäsitteiseksi eli 
 kahden solmun välillä ei
@@ -183,7 +183,7 @@ ja virtauksen määrän määrittämisestä turhaa, koska jos halutaan laskea ai
 Mincost-flow käyttäen Mincost-circulationia, voidaan lisätä kyseiseen verkkoon kaari 
 kohdesolmusta lähtösolmuun jonka kapasiteetti on $k$ ja hinta on itseisarvoltaan
 tarpeeksi suuri negatiivinen luku. Määritellään Mincost-circulation-ongelma: 
-Annetaan virtausverkko $G = (V, E, U, C)$, jossa $U(e) \in \mathbb{Z_+}$ on 
+Olkoon $G = (V, E, U, C)$ virtausverkko, jossa $U(e) \in \mathbb{Z_+}$ on 
 kaaren $e$ kapasiteetti ja $C(e) \in \mathbb{R}$ on kaaren $e$ hinta. Tavoitteena on löytää minimihintainen virtaus
 $f$ jota merkitään funktiona
 $f : E \rightarrow \mathbb{Z}$ joka: \\\\ Minimoi $$\sum_{uv \in E} C(uv) f(uv)$$\\
@@ -215,16 +215,16 @@ binääriesityksien $i$:tä eniten merkitsevää bittiä. Vaiheessa $0$ kaikki k
 ratkaisu on triviaali. Ongelmaksi jää siirtyminen vaiheesta $i$ vaiheeseen $i+1$. Sanotaan
 että siirtyminen tehdään kahdessa vaiheessa, skaalausvaiheessa ja augmentointivaiheessa.
 \subsection*{Skaalausvaihe}
-Huomataan että $U_{i+1}(uv) = U_i(uv)*2$ tai $U_{i+1}(uv) = U_i(uv)*2+1$. Voidaan siis ensin kertoa
+Huomataan että $U_{i+1}(uv) = U_i(uv) \cdot 2$ tai $U_{i+1}(uv) = U_i(uv) \cdot 2+1$. Voidaan siis ensin kertoa
 kaikkien kaarien kapasiteetit ja niissä kulkeva virtaus kahdella. Virtaus toteuttaa edelleen
 kaikki ehdot ja on optimaalinen.
 \subsection*{Augmentointivaihe}
-Skaalausvaiheen jälkeen oltaisiin valmiita jos $U_{i+1}(uv) = U_i(uv)*2$ toteutuisi kaikilla
-kaarilla. Kuitenkin kaarilla joilla $U_{i+1}(uv) = U_i(uv)*2+1$ pitää lisätä kapasiteettia 
+Skaalausvaiheen jälkeen oltaisiin valmiita jos $U_{i+1}(uv) = U_i(uv) \cdot 2$ toteutuisi kaikilla
+kaarilla. Kuitenkin kaarilla joilla $U_{i+1}(uv) = U_i(uv) \cdot 2+1$ pitää lisätä kapasiteettia 
 vielä yhdellä.
 Kun kasvatetaan tällaisten kaarien kapasiteettia yhdellä yksi kaari kerrallaan 
 ongelma palautuu ongelmaan:
-Annetaan minimihintainen virtaus verkossa. Löydä minimihintainen virtaus kun yhden kaaren 
+Annetaan virtausverkko ja minimihintainen virtaus siellä. Löydä minimihintainen virtaus kun yhden kaaren 
 kapasiteettia kasvatetaan yhdellä.
 \subsection*{Augmentointi}
 Muistetaan että virtaus on optimaalinen jos sen jäännösverkossa ei ole negatiivista
@@ -305,7 +305,8 @@ on polynominen aikavaativuus ja teoriassa parempi kuin aiemmin käsitellyt algor
 Vertailun vuoksi maksimivirtauksen laskemiseen käytetyn Edmonds-Karp algoritmin aikavaativuus
 on $O(m^2n)$.
 \subsection*{Lisähuomio potentiaaleista}
-Monessa kohdassa solmujen potentiaaleihin lisätään jotain epämääräisiä lukuja joiden suuruutta
+Monessa kohdassa solmujen potentiaaleihin lisätään jotain lukuja jotka riippuvat potentiaaleista
+ja joiden suuruutta
 algoritmin aikana ei ole analysoitu. Potentiaalien kasvaminen räjähdysmäisesti osoittautuu
 myös käytännön ongelmaksi. Potentiaalifunktion kuitenkin pystyy korjaamaan $O(m \log n)$ ajassa
 sellaiseksi että kaikki potentiaalit ovat rajoitettuja suhteessa syötteen kokoon.
@@ -316,7 +317,8 @@ vielä käsitelty. Asetetaan näiden solmujen potentiaaliksi lyhin reitti solmus
 suurin korjattu potentiaali ennen tätä vaihetta. Nyt saadaan pätevä potentiaalifunktio, jonka
 itseisarvo on kaikissa solmuissa korkeintaan $nC$, jossa $C$ on suurin hintojen itseisarvo. Korjaaminen
 voidaan tehdä vaikka jokaisen potentiaalien päivityksen jälkeen eikä se vaikuta aikavaativuuteen koska
-Dijkstra ajetaan kuitenkin aina kun potentiaaleja päivitetään.
+Dijkstra ajetaan kuitenkin aina kun potentiaaleja päivitetään. Kokeilin monia tapoja
+korjata potentiaaleja implementaatiossa, ja tämä oli ainoa jonka sain toimimaan.
 \end{document}
 
 
